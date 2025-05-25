@@ -1,4 +1,4 @@
-package com.jwt.authentication.jwtAuthentication.models;
+package com.jwt.authentication.jwtAuthentication.dto;
 
 
 import lombok.*;

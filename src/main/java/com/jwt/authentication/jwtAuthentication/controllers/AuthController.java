@@ -1,8 +1,8 @@
 package com.jwt.authentication.jwtAuthentication.controllers;
 
 import com.jwt.authentication.jwtAuthentication.entities.User;
-import com.jwt.authentication.jwtAuthentication.models.JwtRequest;
-import com.jwt.authentication.jwtAuthentication.models.JwtResponse;
+import com.jwt.authentication.jwtAuthentication.dto.JwtRequest;
+import com.jwt.authentication.jwtAuthentication.dto.JwtResponse;
 import com.jwt.authentication.jwtAuthentication.security.JwtHelper;
 import com.jwt.authentication.jwtAuthentication.services.UserService;
 import org.slf4j.Logger;
@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
@@ -48,6 +49,7 @@ public class AuthController {
         JwtResponse response = JwtResponse.builder()
                 .jwtToken(token)
                 .username(userDetails.getUsername()).build();
+        System.out.println(response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -70,8 +72,27 @@ public class AuthController {
     }
 
     @PostMapping("/create-user")
-    public User createUser(@RequestBody User user){
+    public ResponseEntity<String> createUser(@RequestBody User user){
         return userService.createUser(user);
     }
 
+    @DeleteMapping("/remove/{userId}")
+    public String removeUser(@PathVariable int userId){
+        User tempUser = userService.findById(userId);
+        if(tempUser == null){
+            throw new RuntimeException("User Id not found - "+userId);
+        }
+        userService.deleteById(userId);
+        return "User "+tempUser.getFirstName()+" is successfully removed from the system.";
+    }
+
+    @GetMapping("/forgotPassword/{emailId}")
+    public ResponseEntity<String> userForgotPassword(@PathVariable String emailId){
+        return userService.forgotPassword(emailId);
+    }
+
+    @PutMapping("/secure/resetPassword/{securityToken}")
+    public ResponseEntity<String> userResetPassword(@RequestBody User user, @PathVariable String securityToken) {
+        return userService.resetPassword(user, securityToken);
+    }
 }

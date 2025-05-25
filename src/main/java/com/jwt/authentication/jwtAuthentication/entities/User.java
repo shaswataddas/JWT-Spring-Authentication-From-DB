@@ -19,14 +19,32 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private String userId;
+
     @Column(name = "first_name")
-    private String name;
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
     @Column(name = "email")
     private String email;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "aadhar_no")
     private String aadharNo;
+
+    @Column(name = "created_date")
+    private String createdDate;
+
+    @Column(name = "password_reset_token")
+    private String passResetToekn;
+
+    @Column(name = "reset_token_generation_time")
+    private String tokenCreationTime;
+
+    @Column(name = "reset_token_expairy_time")
+    private String tokenExpairyTime;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
